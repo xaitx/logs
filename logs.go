@@ -9,9 +9,10 @@ import (
 
 // 定义一个日志struct
 type Logger struct {
-	Level    int         // 输出日志级别
-	FilePath string      // 输出日志路径
+	level    int         // 输出日志级别
+	filePath string      // 输出日志路径
 	logger   *log.Logger // 日志对象
+	time     bool        // 是否开启日志前面的时间显示
 }
 
 // 定义日志级别常量
@@ -23,10 +24,24 @@ const (
 	FATAL        // FATAL=4 紫色
 )
 
-// NewLogger 创建一个日志对象
-func NewLogger(level int, filePath string) (*Logger, error) {
+// NewLogger 创建一个新的日志记录器。
+// 参数:
+//   - level: 日志级别。
+//   - filePath: 日志文件路径。如果为空，则日志输出到控制台。
+//   - time: 是否在日志中包含时间。
+//
+// 返回值:
+//   - *Logger: 新创建的日志记录器。
+//   - error: 如果创建日志记录器时发生错误，则返回错误信息。
+func NewLogger(level int, filePath string, time bool) (*Logger, error) {
+	var flag int
+	if time {
+		flag = log.LstdFlags
+	} else {
+		flag = 0
+	}
 
-	logger := log.New(os.Stdout, "", log.LstdFlags)
+	logger := log.New(os.Stdout, "", flag)
 
 	// 判断filePath是否为空，为空则输出到控制台
 	if filePath != "" {
@@ -38,15 +53,16 @@ func NewLogger(level int, filePath string) (*Logger, error) {
 	}
 
 	return &Logger{
-		Level:    level,
-		FilePath: filePath,
+		level:    level,
+		filePath: filePath,
 		logger:   logger,
+		time:     time,
 	}, nil
 }
 
 // Debug 输出debug日志
 func (l *Logger) Debug(v ...interface{}) {
-	if l.Level <= DEBUG {
+	if l.level <= DEBUG {
 		l.logger.SetPrefix("[DEBUG] ")
 		l.logger.Println(Gray(fmt.Sprint(v...)))
 	}
@@ -54,7 +70,7 @@ func (l *Logger) Debug(v ...interface{}) {
 
 // Info 输出info日志
 func (l *Logger) Info(v ...interface{}) {
-	if l.Level <= INFO {
+	if l.level <= INFO {
 		l.logger.SetPrefix("[INFO]  ")
 		l.logger.Println(Green(fmt.Sprint(v...)))
 	}
@@ -62,7 +78,7 @@ func (l *Logger) Info(v ...interface{}) {
 
 // Warn 输出warn日志
 func (l *Logger) Warn(v ...interface{}) {
-	if l.Level <= WARN {
+	if l.level <= WARN {
 		l.logger.SetPrefix("[WARN]  ")
 		l.logger.Println(Yellow(fmt.Sprint(v...)))
 	}
@@ -70,7 +86,7 @@ func (l *Logger) Warn(v ...interface{}) {
 
 // Error 输出error日志
 func (l *Logger) Error(v ...interface{}) {
-	if l.Level <= ERROR {
+	if l.level <= ERROR {
 		l.logger.SetPrefix("[ERROR] ")
 		l.logger.Println(Red(fmt.Sprint(v...)))
 	}
@@ -78,8 +94,13 @@ func (l *Logger) Error(v ...interface{}) {
 
 // Fatal 输出fatal日志
 func (l *Logger) Fatal(v ...interface{}) {
-	if l.Level <= FATAL {
+	if l.level <= FATAL {
 		l.logger.SetPrefix("[FATAL] ")
 		l.logger.Fatalln(Purple(fmt.Sprint(v...)))
 	}
+}
+
+// 输出不做任何处理的信息
+func (l *Logger) Print(v ...interface{}) {
+	l.logger.Println(v...)
 }
