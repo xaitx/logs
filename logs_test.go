@@ -7,35 +7,25 @@ import (
 )
 
 func TestColorOutput(t *testing.T) {
-	// 通过颜色输出日志
-	logger, err := logs.NewLogger(logs.DEBUG, "", false)
-	if err != nil {
-		t.Error(err)
-	}
-	// 输出测试颜色
-	logger.Print(logs.Gray("Gray"))
-	logger.Print(logs.Green("Green"))
-	logger.Print(logs.Yellow("Yellow"))
-	logger.Print(logs.Red("Red"))
-	logger.Print(logs.Purple("Purple"))
-	logger.Print(logs.Cyan("Cyan"))
-	logger.Print(logs.White("White"))
-	logger.Print(logs.Black("Black"))
-	logger.Print(logs.Blue("Blue"))
-	logger.Print(logs.Magenta("Magenta"))
-	logger.Print(logs.Cyan("Cyan"))
-
+	logs.PrintColor(logs.Red, "Red")
+	logs.PrintColor(logs.Green, "Green")
+	logs.PrintColor(logs.Yellow, "Yellow")
+	logs.PrintColor(logs.Blue, "Blue")
+	logs.PrintColor(logs.Gray, "Gray")
+	logs.PrintColor(logs.Magenta, "Magenta")
+	logs.PrintColor(logs.Purple, "Purple")
+	logs.PrintColor(logs.Cyan, "Cyan")
+	logs.PrintColor(logs.White, "White")
+	logs.PrintColor(logs.Black, "Black")
+	logs.PrintColor(logs.Bold, "Bold")
 }
 
 // 测试Logs输出
 func TestLogs(t *testing.T) {
-	logger, err := logs.NewLogger(logs.DEBUG, "", false)
-	if err != nil {
-		t.Error(err)
-	}
-	logger.Debug("this is debug")
-	logger.Info("this is info")
-	logger.Warn("this is warn")
-	logger.Error("this is error")
-	// logger.Fatal("this is fatal")
+	logs.Debug("This is a debug message")
+	logs.Info("This is an info message")
+	logs.Warn("This is a warning message")
+	logs.Error("This is an error message")
+	logs.Print("This is a print message")
+	logs.Fatal("This is a fatal message")
 }
