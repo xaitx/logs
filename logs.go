@@ -18,6 +18,7 @@ const (
 var (
 	level  = DEBUG                                 // 输出日志级别
 	logger = log.New(os.Stdout, "", log.LstdFlags) // 日志输出对象
+	prefix = true                                  // 是否输出日志的前缀
 )
 
 // SetLevel 设置日志输出级别 DEBUG, INFO, WARN, ERROR, FATAL
@@ -44,12 +45,23 @@ func SetLogger(w io.Writer) {
 	logger.SetOutput(w)
 }
 
+// 设置是否输出日志的前缀，比如INFO的前缀为[INFO], 默认为true
+func SetPrefix(b bool) {
+	prefix = b
+}
+
 // Debug 输出debug日志
 func Debug(v ...interface{}) {
 	if level > DEBUG {
 		return
 	}
-	logger.SetPrefix("[DEBUG] ")
+
+	if prefix {
+		logger.SetPrefix("[DEBUG] ")
+	} else {
+		logger.SetPrefix("")
+	}
+
 	logger.Println(Gray(fmt.Sprint(v...)))
 }
 
@@ -58,7 +70,13 @@ func Info(v ...interface{}) {
 	if level > INFO {
 		return
 	}
-	logger.SetPrefix("[INFO]  ")
+
+	if prefix {
+		logger.SetPrefix("[INFO]  ")
+	} else {
+		logger.SetPrefix("")
+	}
+
 	logger.Println(Green(fmt.Sprint(v...)))
 }
 
@@ -67,7 +85,13 @@ func Warn(v ...interface{}) {
 	if level > WARN {
 		return
 	}
-	logger.SetPrefix("[WARN]  ")
+
+	if prefix {
+		logger.SetPrefix("[WARN]  ")
+	} else {
+		logger.SetPrefix("")
+	}
+
 	logger.Println(Yellow(fmt.Sprint(v...)))
 }
 
@@ -76,7 +100,13 @@ func Error(v ...interface{}) {
 	if level > ERROR {
 		return
 	}
-	logger.SetPrefix("[ERROR] ")
+
+	if prefix {
+		logger.SetPrefix("[ERROR] ")
+	} else {
+		logger.SetPrefix("")
+	}
+
 	logger.Println(Red(fmt.Sprint(v...)))
 }
 
@@ -85,7 +115,13 @@ func Fatal(v ...interface{}) {
 	if level > FATAL {
 		return
 	}
-	logger.SetPrefix("[FATAL] ")
+
+	if prefix {
+		logger.SetPrefix("[FATAL] ")
+	} else {
+		logger.SetPrefix("")
+	}
+
 	logger.Fatalln(Purple(fmt.Sprint(v...)))
 }
 
